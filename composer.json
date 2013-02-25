@@ -1,0 +1,22 @@
+{
+    "name": "cannibal/pagination-bundle",
+    "description": "Provides a standard interface for paginating any resource collection internally or via a uri request",
+    "keywords": ["rest", "pagination"],
+    "type": "symfony-bundle",
+    "license": "EPL",
+    "authors": [
+        {
+            "name": "Adam White",
+            "email": "cannibal234@gmail.com"
+        }
+    ],
+    "require": {
+        "white-october/pagerfanta-bundle" : "dev-master"
+    },
+    "autoload":{
+        "psr-0":{
+            "Cannibal\\Bundle\\PaginationBundle": ""
+        }
+    },
+    "target-dir": "Cannibal/Bundle/PaginationBundle"
+}
