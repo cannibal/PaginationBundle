@@ -2,12 +2,13 @@
 namespace Cannibal\Bundle\PaginationBundle\Pagination;
 
 use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig;
+use Cannibal\Bundle\PaginationBundle\Pagination\PaginatedCollectionInterface;
 use Pagerfanta\PagerfantaInterface;
 
 /**
  * This class represents paginated items
  */
-class PaginatedCollection
+class PaginatedCollection implements PaginatedCollectionInterface
 {
     private $configuration;
 
@@ -29,7 +30,7 @@ class PaginatedCollection
         return $this->adapter;
     }
 
-    public function setConfiguration($configuration)
+    public function setConfiguration(PaginationConfigInterface $configuration)
     {
         $this->configuration = $configuration;
     }

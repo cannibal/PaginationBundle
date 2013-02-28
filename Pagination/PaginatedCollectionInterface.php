@@ -1,7 +1,7 @@
 <?php
 namespace Cannibal\Bundle\PaginationBundle\Pagination;
 
-use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig;
+use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfigInterface;
 
 /**
  * This interface defines functionality for a paginator
@@ -21,14 +21,14 @@ interface PaginatedCollectionInterface
      * @param PaginationConfig $config
      * @return mixed
      */
-    public function setConfiguration(PaginationConfig $config);
+    public function setConfiguration(PaginationConfigInterface $config);
 
     /**
      * This function returns the wrapped paginator instance.
      *
      * @return mixed
      */
-    public function getPaginator();
+    public function getAdapter();
 
     /**
      * @return array
