@@ -50,7 +50,7 @@ class PaginatedCollection implements PaginatedCollectionInterface, PaginatedColl
      */
     public function getResults()
     {
-        return $this->getAdapter()->getCurrentPageResults()->getArray();
+        return $this->getAdapter()->getCurrentPageResults()->getArrayCopy();
     }
 
     public function getCurrent()
