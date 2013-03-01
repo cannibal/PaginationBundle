@@ -5,10 +5,18 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="pagination.manager" class="Cannibal\Bundle\PaginationBundle\Pagination\Manager">
-            <argument type="service" id="pagination.paginated_items.factory"/>
+        <service id="pagination.manager" class="Cannibal\Bundle\PaginationBundle\Pagination\Paginator" scope="request">
+            <argument type="service" id="request"/>
+            <argument type="service" id="pagination.paginated.collection.factory"/>
+            <argument type="service" id="pagination.paginated.collection.metadata.factory"/>
+            <argument type="service" id="pagination.configuration.factory"/>
+            <argument type="service" id="pagination.fetcher"/>
+            <argument type="service" id="form.factory"/>
+            <argument type="service" id="validator"/>
         </service>
+        <service id="pagination.fetcher" class="Cannibal\Bundle\PaginationBundle\Pagination\Fetcher\PaginationFetcher"/>
         <service id="pagination.configuration.factory" class="Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginationConfigFactory"/>
-        <service id="pagination.paginated_items.factory" class="Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginatedItemsFactory"/>
+        <service id="pagination.paginated.collection.factory" class="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Factory\PaginatedCollectionFactory"/>
+        <service id="pagination.paginated.collection.metadata.factory" class="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Factory\MetadataFactory"/>
     </services>
 </container>

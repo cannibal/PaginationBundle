@@ -3,112 +3,88 @@
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                     xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
-<class name="Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig">
-    <property name="current">
-        <constraint name="NotBlank"/>
-        <constraint name="NotNull"/>
-        <constraint name="Regex">
-            <option name="pattern">/^\d+/</option>
-        </constraint>
-        <constraint name="Min">1</constraint>
-    </property>
+    <class name="Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig">
+        <property name="current">
+            <constraint name="NotNull"/>
+            <constraint name="Regex">
+                <option name="pattern">/^\d+/</option>
+            </constraint>
+            <constraint name="Min">1</constraint>
+        </property>
 
-    <property name="itemsPerPage">
-        <constraint name="NotBlank"/>
-        <constraint name="NotNull"/>
-        <constraint name="Regex">
-            <option name="pattern">/^\d+/</option>
-        </constraint>
-        <constraint name="Min">1</constraint>
-    </property>
+        <property name="itemsPerPage">
+            <constraint name="NotNull"/>
+            <constraint name="Regex">
+                <option name="pattern">/^\d+/</option>
+            </constraint>
+            <constraint name="Min">1</constraint>
+        </property>
+    </class>
 
-    <property name="next">
-        <constraint name="NotBlank">
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-        <constraint name="Regex">
-            <option name="pattern">/^\d+/</option>
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-        <constraint name="Min">
-            <option name="limit">
-                <value>1</value>
-            </option>
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-    </property>
 
-    <property name="previous">
-        <constraint name="NotBlank">
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-        <constraint name="Regex">
-            <option name="pattern">/^\d+/</option>
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-        <constraint name="Min">
-            <option name="limit">
-                <value>1</value>
-            </option>
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-    </property>
+    <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollection">
+        <property name="current">
+            <constraint name="NotNull"/>
+            <constraint name="Regex">
+                <option name="pattern">/^\d+/</option>
+            </constraint>
+            <constraint name="Min">1</constraint>
+        </property>
 
-    <property name="totalItems">
-        <constraint name="NotBlank">
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-        <constraint name="Regex">
-            <option name="pattern">/^\d+/</option>
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-        <constraint name="Min">
-            <option name="limit">
-                <value>0</value>
-            </option>
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-    </property>
+        <property name="itemsPerPage">
+            <constraint name="NotNull"/>
+            <constraint name="Regex">
+                <option name="pattern">/^\d+/</option>
+            </constraint>
+            <constraint name="Min">1</constraint>
+        </property>
 
-    <property name="totalPages">
-        <constraint name="NotBlank">
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-        <constraint name="Regex">
-            <option name="pattern">/^\d+/</option>
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-        <constraint name="Min">
-            <option name="limit">
-                <value>1</value>
-            </option>
-            <option name="groups">
-                <value>response</value>
-            </option>
-        </constraint>
-    </property>
+        <property name="next">
+            <constraint name="NotNull"/>
+            <constraint name="Regex">
+                <option name="pattern">/^\d+/</option>
+            </constraint>
+            <constraint name="Min">
+                <option name="limit">
+                    <value>1</value>
+                </option>
+            </constraint>
+        </property>
 
-</class>
+        <property name="previous">
+            <constraint name="NotBlank"/>
+            <constraint name="Regex">
+                <option name="pattern">/^\d+/</option>
+            </constraint>
+            <constraint name="Min">
+                <option name="limit">
+                    <value>1</value>
+                </option>
+            </constraint>
+        </property>
+
+        <property name="totalItems">
+            <constraint name="NotBlank"/>
+            <constraint name="Regex">
+                <option name="pattern">/^\d+/</option>
+            </constraint>
+            <constraint name="Min">
+                <option name="limit">
+                    <value>0</value>
+                </option>
+            </constraint>
+        </property>
+
+        <property name="totalPages">
+            <constraint name="NotBlank"/>
+            <constraint name="Regex">
+                <option name="pattern">/^\d+/</option>
+            </constraint>
+            <constraint name="Min">
+                <option name="limit">
+                    <value>1</value>
+                </option>
+            </constraint>
+        </property>
+    </class>
 </constraint-mapping>

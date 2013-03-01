@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer>
+    <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollection">
+        <property name="current" type="integer" />
+        <property name="next" type="integer"/>
+        <property name="previous" type="integer"/>
+        <property name="itemsPerPage" type="integer"/>
+        <property name="totalPages" type="integer"/>
+        <property name="totalItems" type="integer"/>
+    </class>
+</serializer>

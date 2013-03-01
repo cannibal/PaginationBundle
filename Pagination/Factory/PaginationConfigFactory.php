@@ -19,11 +19,10 @@ class PaginationConfigFactory implements PaginationConfigFactoryInterface
         return new PaginationConfigType();
     }
 
-    public function createPaginationConfiguration($page = 1, $itemsPerPage = 15)
+    public function createPaginationConfiguration()
     {
         $config = new PaginationConfig();
-        $config->setItemsPerPage($itemsPerPage);
-        $config->setCurrent($page);
+
         return $config;
     }
 }

@@ -12,7 +12,7 @@ use Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginatedItemsFactory;
  * Time: 15:38
  * To change this template use File | Settings | File Templates.
  */
-class PaginatedItemsTest extends PHPUnit_Framework_TestCase
+class PaginatedCollectionsTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @return \Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginatedItemsFactory
@@ -23,11 +23,11 @@ class PaginatedItemsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject||\Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig
+     * @return \PHPUnit_Framework_MockObject_MockObject||\Cannibal\Bundle\PaginationBundle\Pagination\
      */
     public function createConfigurationMock()
     {
-        return $this->getMock('\\Cannibal\\Bundle\\PaginationBundle\\Pagination\\PaginationConfig');
+        return $this->getMock('\\Cannibal\\Bundle\\PaginationBundle\\Pagination\\Paginated\\Collection\\Metadata');
     }
 
     /**
@@ -44,10 +44,10 @@ class PaginatedItemsTest extends PHPUnit_Framework_TestCase
 
         $adapter = $this->createPagerfantaMock();
         $configuration = $this->createConfigurationMock();
-        $out = $factory->createPaginatedItems($adapter, $configuration);
+        $out = $factory->createPaginatedCollection($adapter, $configuration);
 
         $this->assertInstanceOf('Cannibal\\Bundle\\PaginationBundle\\Pagination\\PaginatedCollection', $out);
         $this->assertEquals($out->getAdapter(), $adapter);
-        $this->assertEquals($out->getConfiguration(), $configuration);
+        $this->assertEquals($out->getMetadata(), $configuration);
     }
 }

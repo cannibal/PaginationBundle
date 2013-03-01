@@ -11,5 +11,5 @@ interface PaginationConfigFactoryInterface
      * @param int $itemsPerPage
      * @return \Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfigInterface
      */
-    public function createPaginationConfiguration($page = 1, $itemsPerPage = 15);
+    public function createPaginationConfiguration();
 }

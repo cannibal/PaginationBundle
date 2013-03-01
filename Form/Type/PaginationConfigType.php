@@ -11,11 +11,7 @@ class PaginationConfigType extends AbstractType
     {
         $builder
             ->add('itemsPerPage', 'integer', array('empty_data'=>"15"))
-            ->add('current', 'integer', array('empty_data' => "1"))
-            ->add('next', 'integer')
-            ->add('previous', 'integer')
-            ->add('totalPages', 'integer')
-            ->add('totalItems', 'integer');
+            ->add('current', 'integer', array('empty_data' => "1"));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -32,6 +28,6 @@ class PaginationConfigType extends AbstractType
      */
     public function getName()
     {
-        return 'paginationconfig';
+        return 'pagination';
     }
 }
