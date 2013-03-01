@@ -278,6 +278,7 @@ class Paginator
 
         $totalPages = $pagerfanta->getNbPages();
         $current = $config->getCurrent();
+
         if($current <= $totalPages && $current > 0){
             $pagerfanta->setCurrentPage($current);
         }
@@ -287,6 +288,7 @@ class Paginator
 
         $metadata = $this->getMetaFactory()->createPaginatedCollectionMetadata();
 
+        $metadata->setCurrent($current);
         $metadata->setNext($next);
         $metadata->setPrevious($previous);
 
