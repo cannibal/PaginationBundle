@@ -2,6 +2,7 @@
 namespace Cannibal\Bundle\PaginationBundle\Pagination\Paginated;
 
 use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfigInterface;
+use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Metadata;
 
 /**
  * This interface defines functionality for a paginator
@@ -19,4 +20,9 @@ interface PaginatedCollectionInterface
      * @return array
      */
     public function getResults();
+
+    /**
+     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Metadata
+     */
+    public function getMetadata();
 }
