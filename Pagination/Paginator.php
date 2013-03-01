@@ -158,7 +158,7 @@ class Paginator
     }
 
     /**
-     * @return Factory\PaginatedCollectionFactory
+     * @return Paginated\Factory\PaginatedCollectionFactory
      */
     public function getPaginatedItemsFactory()
     {
@@ -270,19 +270,28 @@ class Paginator
         $pagerfanta = $this->createPagerfanta($adapter);
 
         $pagerfanta->setMaxPerPage($config->getItemsPerPage());
-        $pagerfanta->setCurrentPage($config->getCurrent());
+
 
         $out = $this->getPaginatedItemsFactory()->createPaginatedCollection($pagerfanta);
         $next = $pagerfanta->hasNextPage() ? $pagerfanta->getNextPage() : null;
         $previous = $pagerfanta->hasPreviousPage() ? $pagerfanta->getPreviousPage() : null;
+
+        $totalPages = $pagerfanta->getNbPages();
+        $current = $config->getCurrent();
+        if($current <= $totalPages && $current > 0){
+            $pagerfanta->setCurrentPage($current);
+        }
+        else{
+            throw new PaginationConfigException(sprintf('Page %s does not exist', $current));
+        }
 
         $metadata = $this->getMetaFactory()->createPaginatedCollectionMetadata();
 
         $metadata->setNext($next);
         $metadata->setPrevious($previous);
 
-        $metadata->setTotalPages($pagerfanta->getNbPages());
         $metadata->setTotalItems($pagerfanta->getNbResults());
+        $metadata->setTotalPages($totalPages);
 
         $out->setMetadata($metadata);
 
