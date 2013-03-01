@@ -15,7 +15,7 @@ class PaginationFetcher
         $out = array();
 
         if(isset($data['page'])){
-            $out['page'] = $data['page'];
+            $out['current'] = $data['page'];
         }
 
         if(isset($data['per_page'])){
