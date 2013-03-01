@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <serializer>
     <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Metadata">
-        <property name="current" type="integer" groups="pagination"/>
-        <property name="next" type="integer" groups="pagination"/>
-        <property name="previous" type="integer" groups="pagination"/>
-        <property name="totalItems" type="integer" groups="pagination"/>
+        <property name="page" type="integer" groups="pagination"/>
+        <property name="nextPage" type="integer" groups="pagination"/>
+        <property name="previousPage" type="integer" groups="pagination"/>
+        <property name="totalResults" type="integer" groups="pagination"/>
         <property name="totalPages" type="integer" groups="pagination"/>
-        <property name="itemsPerPage" type="integer" groups="pagination"/>
+        <property name="perPage" type="integer" groups="pagination"/>
     </class>
 </serializer>

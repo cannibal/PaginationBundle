@@ -10,7 +10,7 @@ namespace Cannibal\Bundle\PaginationBundle\Pagination;
  */
 interface PaginationConfigInterface
 {
-    public function getCurrent();
+    public function getPage();
 
-    public function getItemsPerPage();
+    public function getPerPage();
 }

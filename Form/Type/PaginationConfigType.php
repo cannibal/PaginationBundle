@@ -10,8 +10,8 @@ class PaginationConfigType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('itemsPerPage', 'integer', array('empty_data'=>"15"))
-            ->add('current', 'integer', array('empty_data' => "1"));
+            ->add('perPage', 'integer', array('empty_data'=>"15"))
+            ->add('page', 'integer', array('empty_data' => "1"));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

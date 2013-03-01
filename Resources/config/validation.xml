@@ -4,7 +4,7 @@
                     xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
     <class name="Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig">
-        <property name="current">
+        <property name="page">
             <constraint name="NotNull"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
@@ -12,7 +12,7 @@
             <constraint name="Min">1</constraint>
         </property>
 
-        <property name="itemsPerPage">
+        <property name="perPage">
             <constraint name="NotNull"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
@@ -23,7 +23,11 @@
 
 
     <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollection">
-        <property name="current">
+
+    </class>
+
+    <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Metadata">
+        <property name="page">
             <constraint name="NotNull"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
@@ -31,7 +35,7 @@
             <constraint name="Min">1</constraint>
         </property>
 
-        <property name="itemsPerPage">
+        <property name="perPage">
             <constraint name="NotNull"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
@@ -39,7 +43,7 @@
             <constraint name="Min">1</constraint>
         </property>
 
-        <property name="next">
+        <property name="nextPage">
             <constraint name="NotNull"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
@@ -51,7 +55,7 @@
             </constraint>
         </property>
 
-        <property name="previous">
+        <property name="previousPage">
             <constraint name="NotBlank"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
@@ -63,7 +67,7 @@
             </constraint>
         </property>
 
-        <property name="totalItems">
+        <property name="totalResults">
             <constraint name="NotBlank"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>

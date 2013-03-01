@@ -15,11 +15,11 @@ class PaginationFetcher
         $out = array();
 
         if(isset($data['page'])){
-            $out['current'] = $data['page'];
+            $out['page'] = $data['page'];
         }
 
         if(isset($data['per_page'])){
-            $out['itemsPerPage'] = $data['per_page'];
+            $out['perPage'] = $data['per_page'];
         }
 
         return $out;

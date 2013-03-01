@@ -7,32 +7,32 @@ use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfigInterface;
  */
 class PaginationConfig implements PaginationConfigInterface
 {
-    private $itemsPerPage;
-    private $current;
+    private $perPage;
+    private $page;
 
     public function __construct()
     {
-        $this->itemsPerPage = null;
-        $this->current = null;
+        $this->perPage = null;
+        $this->page = null;
     }
 
-    public function setCurrent($current)
+    public function setPage($page)
     {
-        $this->current = $current;
+        $this->page = $page;
     }
 
-    public function getCurrent()
+    public function getPage()
     {
-        return $this->current;
+        return $this->page;
     }
 
-    public function setItemsPerPage($itemsPerPage)
+    public function setPerPage($perPage)
     {
-        $this->itemsPerPage = $itemsPerPage;
+        $this->perPage = $perPage;
     }
 
-    public function getItemsPerPage()
+    public function getPerPage()
     {
-        return $this->itemsPerPage;
+        return $this->perPage;
     }
 }

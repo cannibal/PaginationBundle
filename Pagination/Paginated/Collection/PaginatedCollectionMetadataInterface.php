@@ -15,15 +15,15 @@ interface PaginatedCollectionMetadataInterface
      *
      * @return mixed
      */
-    public function getCurrent();
+    public function getPage();
 
-    public function getItemsPerPage();
+    public function getPerPage();
 
-    public function getNext();
+    public function getNextPage();
 
-    public function getPrevious();
+    public function getPreviousPage();
 
-    public function getTotalItems();
+    public function getTotalResults();
 
     public function getTotalPages();
 }

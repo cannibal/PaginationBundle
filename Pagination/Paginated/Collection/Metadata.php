@@ -11,71 +11,61 @@ use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\PaginatedCo
  */
 class Metadata implements PaginatedCollectionMetadataInterface
 {
-    private $current;
-    private $next;
-    private $previous;
-    private $totalItems;
+    private $page;
+    private $nextPage;
+    private $previousPage;
+    private $totalResults;
     private $totalPages;
-    private $itemsPerPage;
+    private $perPage;
 
     public function __construct()
     {
-        $this->current = null;
-        $this->next = null;
-        $this->previous = null;
-        $this->totalItems = null;
+        $this->page = null;
+        $this->nextPage = null;
+        $this->previousPage = null;
+        $this->totalResults = null;
         $this->totalPages = null;
-        $this->itemsPerPage = null;
+        $this->perPage = null;
     }
 
-    public function setCurrent($current)
+    public function setNextPage($nextPage)
     {
-        $this->current = $current;
+        $this->nextPage = $nextPage;
     }
 
-    public function getCurrent()
+    public function getNextPage()
     {
-        return $this->current;
+        return $this->nextPage;
     }
 
-    public function setItemsPerPage($itemsPerPage)
+    public function setPage($page)
     {
-        $this->itemsPerPage = $itemsPerPage;
+        $this->page = $page;
     }
 
-    public function getItemsPerPage()
+    public function getPage()
     {
-        return $this->itemsPerPage;
+        return $this->page;
     }
 
-    public function setNext($next)
+    public function setPerPage($perPage)
     {
-        $this->next = $next;
+        $this->perPage = $perPage;
     }
 
-    public function getNext()
+    public function getPerPage()
     {
-        return $this->next;
+        return $this->perPage;
     }
 
-    public function setPrevious($previous)
+    public function setPreviousPage($previousPage)
     {
-        $this->previous = $previous;
+        $this->previousPage = $previousPage;
     }
 
-    public function getPrevious()
+    public function getPreviousPage()
     {
-        return $this->previous;
-    }
-
-    public function setTotalItems($totalItems)
-    {
-        $this->totalItems = $totalItems;
-    }
-
-    public function getTotalItems()
-    {
-        return $this->totalItems;
+        return $this->previousPage;
     }
 
     public function setTotalPages($totalPages)
@@ -86,5 +76,15 @@ class Metadata implements PaginatedCollectionMetadataInterface
     public function getTotalPages()
     {
         return $this->totalPages;
+    }
+
+    public function setTotalResults($totalResults)
+    {
+        $this->totalResults = $totalResults;
+    }
+
+    public function getTotalResults()
+    {
+        return $this->totalResults;
     }
 }

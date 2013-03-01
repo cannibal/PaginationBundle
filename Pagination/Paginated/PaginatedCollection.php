@@ -53,29 +53,29 @@ class PaginatedCollection implements PaginatedCollectionInterface, PaginatedColl
         return $this->getAdapter()->getCurrentPageResults()->getArrayCopy();
     }
 
-    public function getCurrent()
+    public function getPage()
     {
-        return $this->getMetadata()->getCurrent();
+        return $this->getMetadata()->getPage();
     }
 
-    public function getItemsPerPage()
+    public function getPerPage()
     {
-        return $this->getMetadata()->getItemsPerPage();
+        return $this->getMetadata()->getPerPage();
     }
 
-    public function getNext()
+    public function getNextPage()
     {
-        return $this->getMetadata()->getNext();
+        return $this->getMetadata()->getNextPage();
     }
 
-    public function getPrevious()
+    public function getPreviousPage()
     {
-        return $this->getMetadata()->getPrevious();
+        return $this->getMetadata()->getPreviousPage();
     }
 
-    public function getTotalItems()
+    public function getTotalResults()
     {
-        return $this->getMetadata()->getTotalItems();
+        return $this->getMetadata()->getTotalResults();
     }
 
     public function getTotalPages()
