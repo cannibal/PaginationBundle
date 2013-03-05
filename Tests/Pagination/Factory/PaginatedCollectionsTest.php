@@ -3,7 +3,7 @@ namespace Cannibal\Bundle\PaginationBundle\Tests\Pagination\Factory;
 
 use PHPUnit_Framework_TestCase;
 
-use Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginatedItemsFactory;
+use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Factory\PaginatedCollectionFactory;
 
 /**
  * Created by JetBrains PhpStorm.
@@ -15,11 +15,11 @@ use Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginatedItemsFactory;
 class PaginatedCollectionsTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginatedItemsFactory
+     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Factory\PaginatedCollectionFactory
      */
     public function getPaginatedItemsFactory()
     {
-        return new PaginatedItemsFactory();
+        return new PaginatedCollectionFactory();
     }
 
     /**
@@ -44,7 +44,7 @@ class PaginatedCollectionsTest extends PHPUnit_Framework_TestCase
 
         $adapter = $this->createPagerfantaMock();
         $configuration = $this->createConfigurationMock();
-        $out = $factory->createPaginatedCollection($adapter, $configuration);
+        $out = $factory->createPagerfantaBasedCollection($adapter);
 
         $this->assertInstanceOf('Cannibal\\Bundle\\PaginationBundle\\Pagination\\PaginatedCollection', $out);
         $this->assertEquals($out->getAdapter(), $adapter);

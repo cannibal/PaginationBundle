@@ -8,7 +8,7 @@ namespace Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection;
  * Time: 14:29
  * To change this template use File | Settings | File Templates.
  */
-interface PaginatedCollectionMetadataInterface
+interface MetadataInterface
 {
     /**
      * Returns the current page

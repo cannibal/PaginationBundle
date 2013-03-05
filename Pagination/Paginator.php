@@ -37,7 +37,7 @@ class Paginator
     private $request;
     private $pagerfanta;
     private $configFactory;
-    private $paginatedItemsFactory;
+    private $paginatedCollectionFactory;
     private $metaFactory;
     private $fetcher;
     private $formFactory;
@@ -55,7 +55,7 @@ class Paginator
                                 ValidatorInterface $validator)
     {
         $this->request = $request;
-        $this->paginatedItemsFactory = $paginatedItemsFactory;
+        $this->paginatedCollectionFactory = $paginatedItemsFactory;
         $this->metaFactory = $metaFactory;
         $this->fetcher = $fetcher;
         $this->configFactory = $configFactory;
@@ -126,9 +126,9 @@ class Paginator
         return $this->request;
     }
 
-    public function setPaginatedItemsFactory(PaginatedCollectionFactory $paginatedItemsFactory)
+    public function setPaginatedCollectionFactory(PaginatedCollectionFactory $paginatedItemsFactory)
     {
-        $this->paginatedItemsFactory = $paginatedItemsFactory;
+        $this->paginatedCollectionFactory = $paginatedItemsFactory;
     }
 
     public function setMetaFactory($metaFactory)
@@ -160,9 +160,9 @@ class Paginator
     /**
      * @return Paginated\Factory\PaginatedCollectionFactory
      */
-    public function getPaginatedItemsFactory()
+    public function getPaginatedCollectionFactory()
     {
-        return $this->paginatedItemsFactory;
+        return $this->paginatedCollectionFactory;
     }
 
     public function createPagerfanta(AdapterInterface $adapter)
@@ -226,7 +226,7 @@ class Paginator
      * @return PaginatedCollectionInterface
      * @throws Exception\AdapterSelectionException
      */
-    public function paginate($list, $page = null, $perPage = null)
+    public function paginate($list, $page = null, $perPage = null, $ignorePagination = false)
     {
         $config = $this->getConfigFactory()->createPaginationConfiguration();
 
@@ -246,7 +246,7 @@ class Paginator
         $errors = $this->getValidator()->validate($config);
 
         if(count($errors) > 0){
-            $error = new PaginationConfigException('There was an error with the pagination config');
+            $error = new PaginationConfigException('The pagination configuration was invalid');
             $error->setPaginationErrors($errors);
             throw $error;
         }
@@ -270,29 +270,27 @@ class Paginator
         $pagerfanta = $this->createPagerfanta($adapter);
 
         $pagerfanta->setMaxPerPage($config->getPerPage());
-
-        $out = $this->getPaginatedItemsFactory()->createPaginatedCollection($pagerfanta);
+        $out = $this->getPaginatedCollectionFactory()->createPagerfantaBasedCollection($pagerfanta);
         $next = $pagerfanta->hasNextPage() ? $pagerfanta->getNextPage() : null;
         $previous = $pagerfanta->hasPreviousPage() ? $pagerfanta->getPreviousPage() : null;
 
         $totalPages = $pagerfanta->getNbPages();
         $current = $config->getPage();
 
+        $metadata = $this->getMetaFactory()->createPaginatedCollectionMetadata();
+        $metadata->setPage($current);
+        $metadata->setNextPage($next);
+        $metadata->setPreviousPage($previous);
+        $metadata->setPerPage($config->getPerPage());
+        $metadata->setTotalResults($pagerfanta->getNbResults());
+        $metadata->setTotalPages($totalPages);
+
         if($current <= $totalPages && $current > 0){
             $pagerfanta->setCurrentPage($current);
         }
         else{
-            throw new PaginationConfigException(sprintf('Page %s does not exist', $current));
+            $out = $this->getPaginatedCollectionFactory()->createEmptyCollection();
         }
-
-        $metadata = $this->getMetaFactory()->createPaginatedCollectionMetadata();
-
-        $metadata->setPage($current);
-        $metadata->setNextPage($next);
-        $metadata->setPreviousPage($previous);
-
-        $metadata->setTotalResults($pagerfanta->getNbResults());
-        $metadata->setTotalPages($totalPages);
 
         $out->setMetadata($metadata);
 

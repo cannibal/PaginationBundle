@@ -3,14 +3,14 @@ namespace Cannibal\Bundle\PaginationBundle\Pagination\Paginated;
 
 use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig;
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollectionInterface;
-use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\PaginatedCollectionMetadataInterface;
+use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\MetadataInterface;
 
 use Pagerfanta\PagerfantaInterface;
 
 /**
  * This class represents paginated items
  */
-class PaginatedCollection implements PaginatedCollectionInterface, PaginatedCollectionMetadataInterface
+class AdapterBasedCollection implements PaginatedCollectionInterface, MetadataInterface
 {
     private $metadata;
 
@@ -32,13 +32,13 @@ class PaginatedCollection implements PaginatedCollectionInterface, PaginatedColl
         return $this->adapter;
     }
 
-    public function setMetadata(PaginatedCollectionMetadataInterface $metadata)
+    public function setMetadata(MetadataInterface $metadata)
     {
         $this->metadata = $metadata;
     }
 
     /**
-     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\PaginatedCollectionMetadataInterface
+     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\MetadataInterface
      */
     public function getMetadata()
     {

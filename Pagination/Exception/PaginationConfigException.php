@@ -6,6 +6,23 @@ use Symfony\Component\Validator\ConstraintViolationList;
 class PaginationConfigException extends \InvalidArgumentException
 {
     private $paginationErrors;
+    private $paginationMetadata;
+
+    public function __construct()
+    {
+        $this->paginationErrors = null;
+        $this->paginationMetadata = null;
+    }
+
+    public function setPaginationMetadata($paginationMetadata)
+    {
+        $this->paginationMetadata = $paginationMetadata;
+    }
+
+    public function getPaginationMetadata()
+    {
+        return $this->paginationMetadata;
+    }
 
     public function setPaginationErrors(ConstraintViolationList $paginationErrors)
     {

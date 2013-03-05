@@ -1,7 +1,7 @@
 <?php
 namespace Cannibal\Bundle\PaginationBundle\Tests\Pagination;
 
-use Cannibal\Bundle\PaginationBundle\Pagination\PaginatedCollection;
+use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\AdapterBasedCollection;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -39,7 +39,7 @@ class PaginatedCollectionTest extends PHPUnit_Framework_TestCase
         $mockPager = $this->createPagerfantaMock();
         $confMock = $this->createConfigurationMock();
 
-        $out = new PaginatedCollection($mockPager, $confMock);
+        $out = new AdapterBasedCollection($mockPager, $confMock);
 
         $this->assertEquals($mockPager, $out->getAdapter());
         $this->assertEquals($confMock, $out->getConfiguration());

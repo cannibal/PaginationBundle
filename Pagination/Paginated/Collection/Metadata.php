@@ -1,7 +1,7 @@
 <?php
 namespace Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection;
 
-use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\PaginatedCollectionMetadataInterface;
+use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\MetadataInterface;
 /**
  * Created by JetBrains PhpStorm.
  * User: adam
@@ -9,7 +9,7 @@ use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\PaginatedCo
  * Time: 14:28
  * To change this template use File | Settings | File Templates.
  */
-class Metadata implements PaginatedCollectionMetadataInterface
+class Metadata implements MetadataInterface
 {
     private $page;
     private $nextPage;

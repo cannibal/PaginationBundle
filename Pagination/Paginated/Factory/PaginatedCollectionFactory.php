@@ -1,7 +1,7 @@
 <?php
 namespace Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Factory;
 
-use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollection;
+use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\AdapterBasedCollection;
 use Pagerfanta\PagerfantaInterface;
 use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig;
 
@@ -17,10 +17,15 @@ class PaginatedCollectionFactory
     /**
      * @param \Pagerfanta\PagerfantaInterface $adapter
      * @param \Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig $config
-     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollection
+     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\AdapterBasedCollection
      */
-    public function createPaginatedCollection(PagerfantaInterface $adapter)
+    public function createPagerfantaBasedCollection(PagerfantaInterface $adapter)
     {
-        return new PaginatedCollection($adapter);
+        return new AdapterBasedCollection($adapter);
+    }
+
+    public function createEmptyCollection()
+    {
+        return new \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\EmptyCollection();
     }
 }
