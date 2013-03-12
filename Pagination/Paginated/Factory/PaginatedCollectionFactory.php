@@ -28,4 +28,9 @@ class PaginatedCollectionFactory
     {
         return new \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\EmptyCollection();
     }
+
+    public function createArrayCollection()
+    {
+        return new \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\ArrayCollection();
+    }
 }

@@ -222,21 +222,27 @@ class Paginator
 
     /**
      * @param $list
-     * @param PaginationConfig $config
-     * @return PaginatedCollectionInterface
+     * @param null $page
+     * @param null $perPage
+     * @param bool $ignorePagination
+     * @return Paginated\PaginatedCollectionInterface
+     * @throws Exception\PaginationConfigException
      * @throws Exception\AdapterSelectionException
      */
     public function paginate($list, $page = null, $perPage = null, $ignorePagination = false)
     {
         $config = $this->getConfigFactory()->createPaginationConfiguration();
 
-        if(!is_null($page) || !is_null($perPage)){
+        if($ignorePagination == true){
+            $config->setBypass(true);
+        }
+        elseif(!is_null($page) || !is_null($perPage)){
             if(!is_null($page)){
-                $config->setCurrent($page);
+                $config->setPage($page);
             }
 
             if(!is_null($perPage)){
-                $config->setItemsPerPage($perPage);
+                $config->setPerPage($perPage);
             }
         }
         else{
@@ -253,11 +259,33 @@ class Paginator
 
         $adapter = $this->selectAdapter($list);
 
-        if($adapter == null){
-            throw new AdapterSelectionException(sprintf('Could not find adapter for type %s', gettype($list)));
+        if($config->getBypass()){
+            $out = $this->bypassPagination($adapter, $config);
+        }
+        else{
+            if($adapter == null){
+                throw new AdapterSelectionException(sprintf('Could not find adapter for type %s', gettype($list)));
+            }
+            $out = $this->paginateItems($adapter, $config);
         }
 
-        return $this->paginateItems($adapter, $config);
+        return $out;
+    }
+
+    /**
+     * @param \Pagerfanta\Adapter\AdapterInterface $adapter
+     * @param PaginationConfigInterface $config
+     */
+    protected function bypassPagination(AdapterInterface $adapter, PaginationConfigInterface $config)
+    {
+        $out = $this->getPaginatedCollectionFactory()->createArrayCollection();
+        $results = $adapter->getSlice(0, $adapter->getNbResults());
+        $out->setResults($results->getArrayCopy());
+        $meta = $this->getMetaFactory()->createPaginatedCollectionMetadata();
+        $meta->setTotalResults(count($out->getResults()));
+        $out->setMetadata($meta);
+
+        return $out;
     }
 
     /**

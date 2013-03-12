@@ -5,7 +5,6 @@
 
     <class name="Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig">
         <property name="page">
-            <constraint name="NotNull"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
@@ -13,11 +12,15 @@
         </property>
 
         <property name="perPage">
-            <constraint name="NotNull"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
             <constraint name="Min">1</constraint>
+        </property>
+
+        <property name="bypass">
+            <constraint name="NotNull"/>
+            <constraint name="Type">boolean</constraint>
         </property>
     </class>
 
@@ -28,7 +31,6 @@
 
     <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Metadata">
         <property name="page">
-            <constraint name="NotNull"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
@@ -36,7 +38,6 @@
         </property>
 
         <property name="perPage">
-            <constraint name="NotNull"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
@@ -44,7 +45,6 @@
         </property>
 
         <property name="nextPage">
-            <constraint name="NotNull"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
@@ -56,7 +56,6 @@
         </property>
 
         <property name="previousPage">
-            <constraint name="NotBlank"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
@@ -68,7 +67,7 @@
         </property>
 
         <property name="totalResults">
-            <constraint name="NotBlank"/>
+            <constraint name="NotNull"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
@@ -80,7 +79,6 @@
         </property>
 
         <property name="totalPages">
-            <constraint name="NotBlank"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>

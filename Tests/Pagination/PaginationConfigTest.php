@@ -4,6 +4,7 @@ namespace Cannibal\Bundle\PaginationBundle\Tests\Pagination;
 use PHPUnit_Framework_TestCase;
 
 use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig;
+use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\MetadataInterface;
 
 /**
  * Created by JetBrains PhpStorm.
@@ -17,6 +18,11 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
     public function getConfiguration()
     {
         return new PaginationConfig();
+    }
+
+    public function getMetadataMock()
+    {
+        return $this->getMock('Cannibal\\Bundle\\PaginationBundle\\Pagination\\Paginated\\Collection\\MetadataInterface');
     }
 
     public function testDefaults()

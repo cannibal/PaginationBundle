@@ -13,4 +13,6 @@ interface PaginationConfigInterface
     public function getPage();
 
     public function getPerPage();
+
+    public function getBypass();
 }

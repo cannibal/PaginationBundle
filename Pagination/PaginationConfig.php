@@ -9,11 +9,23 @@ class PaginationConfig implements PaginationConfigInterface
 {
     private $perPage;
     private $page;
+    private $bypass;
 
     public function __construct()
     {
         $this->perPage = null;
         $this->page = null;
+        $this->bypass = false;
+    }
+
+    public function setBypass($bypass)
+    {
+        $this->bypass = $bypass;
+    }
+
+    public function getBypass()
+    {
+        return $this->bypass;
     }
 
     public function setPage($page)
