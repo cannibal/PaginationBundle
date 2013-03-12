@@ -3,7 +3,7 @@ namespace Cannibal\Bundle\PaginationBundle\Pagination\Exception;
 
 use Symfony\Component\Validator\ConstraintViolationList;
 
-class PaginationConfigException extends \InvalidArgumentException
+class PaginationException extends \InvalidArgumentException
 {
     private $paginationErrors;
     private $paginationMetadata;

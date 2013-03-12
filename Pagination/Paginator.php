@@ -19,7 +19,7 @@ use Cannibal\Bundle\PaginationBundle\Pagination\Exception\AdapterSelectionExcept
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Factory\PaginatedCollectionFactory;
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollectionInterface;
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Factory\MetadataFactory;
-use Cannibal\Bundle\PaginationBundle\Pagination\Exception\PaginationConfigException;
+use Cannibal\Bundle\PaginationBundle\Pagination\Exception\PaginationException;
 
 use Cannibal\Bundle\PaginationBundle\Pagination\Fetcher\PaginationFetcher;
 use Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginationConfigFactory;
@@ -226,7 +226,7 @@ class Paginator
      * @param null $perPage
      * @param bool $ignorePagination
      * @return Paginated\PaginatedCollectionInterface
-     * @throws Exception\PaginationConfigException
+     * @throws Exception\PaginationException
      * @throws Exception\AdapterSelectionException
      */
     public function paginate($list, $page = null, $perPage = null, $ignorePagination = false)
@@ -252,7 +252,7 @@ class Paginator
         $errors = $this->getValidator()->validate($config);
 
         if(count($errors) > 0){
-            $error = new PaginationConfigException('The pagination configuration was invalid');
+            $error = new PaginationException('The pagination configuration was invalid');
             $error->setPaginationErrors($errors);
             throw $error;
         }
