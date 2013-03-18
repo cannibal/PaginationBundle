@@ -299,11 +299,20 @@ class Paginator
 
         $pagerfanta->setMaxPerPage($config->getPerPage());
         $out = $this->getPaginatedCollectionFactory()->createPagerfantaBasedCollection($pagerfanta);
-        $next = $pagerfanta->hasNextPage() ? $pagerfanta->getNextPage() : null;
-        $previous = $pagerfanta->hasPreviousPage() ? $pagerfanta->getPreviousPage() : null;
 
         $totalPages = $pagerfanta->getNbPages();
         $current = $config->getPage();
+
+        if($current <= $totalPages && $current > 0){
+            $pagerfanta->setCurrentPage($current);
+        }
+        else{
+            $pagerfanta->setCurrentPage(1);
+            $out = $this->getPaginatedCollectionFactory()->createEmptyCollection();
+        }
+
+        $next = $pagerfanta->hasNextPage() ? $pagerfanta->getNextPage() : null;
+        $previous = $pagerfanta->hasPreviousPage() ? $pagerfanta->getPreviousPage() : null;
 
         $metadata = $this->getMetaFactory()->createPaginatedCollectionMetadata();
         $metadata->setPage($current);
@@ -312,13 +321,6 @@ class Paginator
         $metadata->setPerPage($config->getPerPage());
         $metadata->setTotalResults($pagerfanta->getNbResults());
         $metadata->setTotalPages($totalPages);
-
-        if($current <= $totalPages && $current > 0){
-            $pagerfanta->setCurrentPage($current);
-        }
-        else{
-            $out = $this->getPaginatedCollectionFactory()->createEmptyCollection();
-        }
 
         $out->setMetadata($metadata);
 
