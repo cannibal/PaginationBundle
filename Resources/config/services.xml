@@ -13,6 +13,7 @@
             <argument type="service" id="pagination.fetcher"/>
             <argument type="service" id="form.factory"/>
             <argument type="service" id="validator"/>
+            <argument/>
         </service>
         <service id="pagination.fetcher" class="Cannibal\Bundle\PaginationBundle\Pagination\Fetcher\PaginationFetcher"/>
         <service id="pagination.configuration.factory" class="Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginationConfigFactory"/>
