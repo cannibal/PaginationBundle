@@ -8,8 +8,6 @@ class AdapterPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $managerDef = $container->getDefinition('ukwm_search.manager');
-
         $tagged = $container->findTaggedServiceIds('cannibal_pagination.adapter');
 
         $container->getDefinition('pagination.manager')
