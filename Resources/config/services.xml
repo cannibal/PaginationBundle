@@ -5,18 +5,19 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="pagination.manager" class="Cannibal\Bundle\PaginationBundle\Pagination\Paginator" scope="request">
+        <service id="pagination.manager" alias="cannibal_pagination.pagination.paginator"/>
+        <service id="cannibal_pagination.pagination.paginator" class="Cannibal\Bundle\PaginationBundle\Pagination\Paginator" scope="request">
             <argument type="service" id="request"/>
-            <argument type="service" id="pagination.paginated.collection.factory"/>
-            <argument type="service" id="pagination.paginated.collection.metadata.factory"/>
-            <argument type="service" id="pagination.configuration.factory"/>
-            <argument type="service" id="pagination.fetcher"/>
+            <argument type="service" id="cannibal_pagination.pagination.paginated.collection.factory"/>
+            <argument type="service" id="cannibal_pagination.pagination.paginated.collection.metadata.factory"/>
+            <argument type="service" id="cannibal_pagination.pagination.configuration.factory"/>
+            <argument type="service" id="cannibal_pagination.pagination.fetcher"/>
             <argument type="service" id="form.factory"/>
             <argument type="service" id="validator"/>
         </service>
-        <service id="pagination.fetcher" class="Cannibal\Bundle\PaginationBundle\Pagination\Fetcher\PaginationFetcher"/>
-        <service id="pagination.configuration.factory" class="Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginationConfigFactory"/>
-        <service id="pagination.paginated.collection.factory" class="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Factory\PaginatedCollectionFactory"/>
-        <service id="pagination.paginated.collection.metadata.factory" class="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Factory\MetadataFactory"/>
+        <service id="cannibal_pagination.pagination.fetcher" class="Cannibal\Bundle\PaginationBundle\Pagination\Fetcher\PaginationFetcher"/>
+        <service id="cannibal_pagination.pagination.configuration.factory" class="Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginationConfigFactory"/>
+        <service id="cannibal_pagination.pagination.paginated.collection.factory" class="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Factory\PaginatedCollectionFactory"/>
+        <service id="cannibal_pagination.pagination.paginated.collection.metadata.factory" class="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Factory\MetadataFactory"/>
     </services>
 </container>
