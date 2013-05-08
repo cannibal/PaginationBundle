@@ -50,7 +50,13 @@ class AdapterBasedCollection implements PaginatedCollectionInterface, MetadataIn
      */
     public function getResults()
     {
-        return $this->getAdapter()->getCurrentPageResults()->getArrayCopy();
+        $results = $this->getAdapter()->getCurrentPageResults();
+
+        if($results instanceof \ArrayIterator){
+            $results = $results->getArrayCopy();
+        }
+
+        return $results;
     }
 
     public function getPage()
