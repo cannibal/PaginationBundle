@@ -10,7 +10,16 @@ class AdapterPass implements CompilerPassInterface
     {
         $tagged = $container->findTaggedServiceIds('cannibal_pagination.adapter');
 
+        $adapters = array();
+        foreach($tagged as $serviceId => $definition){
+            $serviceDefinition = $container->getDefinition($serviceId);
+            $adapters[] = $serviceDefinition;
+        }
+
         $container->getDefinition('pagination.manager')
-            ->replaceArgument(7, $tagged);
+            ->replaceArgument(7, $adapters);
+
+        $container->getDefinition('cannibal_paginator')
+            ->replaceArgument(5, $adapters);
     }
 }
