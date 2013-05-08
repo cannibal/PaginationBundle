@@ -45,6 +45,8 @@ class Paginator implements PaginatedCollectionInterface
 
     private $list;
 
+    private $results;
+
     public function __construct(
         PaginatedCollectionFactory $pCFactory,
         MetadataFactory $metaFactory,
