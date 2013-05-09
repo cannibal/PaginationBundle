@@ -72,6 +72,7 @@ class Paginator implements PaginatorInterface
         $this->selectedAdapter = null;
 
         $this->adapters = $adapters;
+        $this->results = null;
     }
 
     protected function createPagerfanta(AdapterInterface $adapter)
@@ -182,8 +183,6 @@ class Paginator implements PaginatorInterface
         $form->bind($data);
 
         $this->requestData = $requestData;
-
-        return $this;
     }
 
     public function getRequestData()
@@ -211,7 +210,7 @@ class Paginator implements PaginatorInterface
                 break;
             case 'object':
                 /** @var PaginationAdapterInterface $thirdPartyAdapter */
-                foreach ($this->getAdapters() as $name => $thirdPartyAdapter) {
+                foreach ($this->getAdapters() as $thirdPartyAdapter) {
                     if ($thirdPartyAdapter instanceof AdapterInterface && $thirdPartyAdapter instanceof PaginationAdapterInterface) {
                         if ($thirdPartyAdapter->supports($list)) {
                             $adapter = $thirdPartyAdapter;
@@ -247,6 +246,7 @@ class Paginator implements PaginatorInterface
         $adapter = $this->getAdapter();
 
         $out = $this->getPaginatedCollectionFactory()->createArrayCollection();
+        /** @var \ArrayIterator $results */
         $results = $adapter->getSlice(0, $adapter->getNbResults());
         $out->setResults($results->getArrayCopy());
         $meta = $this->getMetaFactory()->createPaginatedCollectionMetadata();
