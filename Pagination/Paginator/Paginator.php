@@ -25,7 +25,7 @@ use Doctrine\ORM\QueryBuilder;
 use Cannibal\Bundle\PaginationBundle\Pagination\Exception\PaginationException;
 use Cannibal\Bundle\PaginationBundle\Pagination\Exception\AdapterSelectionException;
 
-class Paginator implements PaginatedCollectionInterface
+class Paginator implements PaginatorInterface
 {
     private $requestData;
 
