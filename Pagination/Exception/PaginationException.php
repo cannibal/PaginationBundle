@@ -8,8 +8,10 @@ class PaginationException extends \InvalidArgumentException
     private $paginationErrors;
     private $paginationMetadata;
 
-    public function __construct()
+    public function __construct($message)
     {
+        parent::__construct($message);
+
         $this->paginationErrors = null;
         $this->paginationMetadata = null;
     }
