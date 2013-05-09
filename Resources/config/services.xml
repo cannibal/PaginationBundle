@@ -6,9 +6,9 @@
 
     <services>
         <service id="cannibal_paginator" class="Cannibal\Bundle\PaginationBundle\Pagination\Paginator\Paginator" scope="prototype">
-            <argument type="service" id="pagination.paginated.collection.factory"/>
-            <argument type="service" id="pagination.paginated.collection.metadata.factory"/>
-            <argument type="service" id="pagination.fetcher"/>
+            <argument type="service" id="cannibal_pagination.pagination.paginated.collection.factory"/>
+            <argument type="service" id="cannibal_pagination.pagination.paginated.collection.metadata.factory"/>
+            <argument type="service" id="cannibal_pagination.pagination.fetcher"/>
             <argument type="service" id="form.factory"/>
             <argument type="service" id="validator"/>
             <argument/>
