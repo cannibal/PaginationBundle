@@ -305,9 +305,11 @@ class Paginator implements PaginatorInterface
      * @param null $bypass
      * @throws \Cannibal\Bundle\PaginationBundle\Pagination\Exception\PaginationException
      */
-    public function paginate($list, $page = null, $perPage = null, $bypass = null)
+    public function paginate($list = null, $page = null, $perPage = null, $bypass = null)
     {
-        $this->setList($list);
+        if($list != null){
+            $this->setList($list);
+        }
 
         if(!is_null($page) || !is_null($perPage) || !is_null($bypass)){
             if(!is_null($page)){
