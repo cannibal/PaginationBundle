@@ -28,4 +28,9 @@ interface PaginatorInterface extends PaginatedCollectionInterface, PaginationCon
      * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginator\PaginatorInterface
      */
     public function setBypass($bypass);
+
+    /**
+     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginator\PaginatorInterface
+     */
+    public function setRequestData(array $requestData);
 }

@@ -182,6 +182,8 @@ class Paginator implements PaginatorInterface
         $form->bind($data);
 
         $this->requestData = $requestData;
+
+        return $this;
     }
 
     public function getRequestData()
