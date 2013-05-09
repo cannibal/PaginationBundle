@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer>
+    <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginator\Paginator" exclusion-policy="ALL"
+           accessor-order="custom" custom-accessor-order="results" access-type="public_method">
+        <property name="results" accessor-getter="getResults" read-only="true" expose="true" type="array" />
+    </class>
+</serializer>

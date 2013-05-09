@@ -1,6 +1,7 @@
 <?php
 namespace Cannibal\Bundle\PaginationBundle\Pagination;
 
+use Cannibal\Bundle\PaginationBundle\Pagination\Adapter\PaginationAdapter;
 use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig;
 use Doctrine\Common\Collections\Collection;
 
@@ -23,6 +24,7 @@ use Cannibal\Bundle\PaginationBundle\Pagination\Exception\PaginationException;
 
 use Cannibal\Bundle\PaginationBundle\Pagination\Fetcher\PaginationFetcher;
 use Cannibal\Bundle\PaginationBundle\Pagination\Factory\PaginationConfigFactory;
+use Cannibal\Bundle\PaginationBundle\Pagination\Adapter\PaginationAdapterInterface;
 
 
 use Symfony\Component\Validator\ValidatorInterface;
@@ -42,6 +44,7 @@ class Paginator
     private $fetcher;
     private $formFactory;
     private $validator;
+    private $adapters;
 
     private $page;
     private $perPage;
@@ -52,7 +55,8 @@ class Paginator
                                 PaginationConfigFactory $configFactory,
                                 PaginationFetcher $fetcher,
                                 FormFactoryInterface $formFactory,
-                                ValidatorInterface $validator)
+                                ValidatorInterface $validator,
+                                array $adapters = array())
     {
         $this->request = $request;
         $this->paginatedCollectionFactory = $paginatedItemsFactory;
@@ -61,8 +65,19 @@ class Paginator
         $this->configFactory = $configFactory;
         $this->formFactory = $formFactory;
         $this->validator = $validator;
+        $this->adapters = $adapters;
         $this->page = null;
         $this->perPage = null;
+    }
+
+    public function setAdapters(array $adapters)
+    {
+        $this->adapters = $adapters;
+    }
+
+    public function getAdapters()
+    {
+        return $this->adapters;
     }
 
     public function setPerPage($perPage)
@@ -191,6 +206,16 @@ class Paginator
         $adapter = null;
         switch($type){
             case 'object':
+                /** @var PaginationAdapterInterface $thirdPartyAdapter  */
+                foreach($this->adapters as $thirdPartyAdapter){
+                    if($thirdPartyAdapter instanceof AdapterInterface && $adapter instanceof PaginationAdapterInterface){
+                        if($thirdPartyAdapter->supports($list)){
+                            $adapter = $thirdPartyAdapter;
+                            break;
+                        }
+                    }
+                }
+
                 if($list instanceof Collection){
                     $adapter = $this->paginateCollection($list);
                 }

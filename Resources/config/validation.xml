@@ -24,6 +24,32 @@
         </property>
     </class>
 
+    <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginator\Paginator">
+        <property name="page">
+            <constraint name="Regex">
+                <option name="pattern">/^\d+/</option>
+            </constraint>
+            <constraint name="Min">1</constraint>
+        </property>
+
+        <property name="perPage">
+            <constraint name="Regex">
+                <option name="pattern">/^\d+/</option>
+            </constraint>
+            <constraint name="Min">1</constraint>
+        </property>
+
+        <property name="bypass">
+            <constraint name="NotNull"/>
+            <constraint name="Type">boolean</constraint>
+        </property>
+
+        <property name="list">
+            <constraint name="NotNull"/>
+            <constraint name="NotBlank"/>
+        </property>
+    </class>
+
 
     <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollection">
 
