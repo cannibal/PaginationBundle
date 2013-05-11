@@ -5,8 +5,19 @@ use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollectionInt
 use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfigInterface;
 
 interface PaginatorInterface extends PaginatedCollectionInterface, PaginationConfigInterface {
+
+    /**
+     * @param null $listIn
+     * @param null $page
+     * @param null $perPage
+     * @param null $bypass
+     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginator\PaginatorInterface
+     */
     public function paginate($listIn = null, $page = null, $perPage = null, $bypass = null);
 
+    /**
+     * @return mixed
+     */
     public function getList();
 
     /**

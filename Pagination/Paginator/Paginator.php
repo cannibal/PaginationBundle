@@ -2,13 +2,14 @@
 namespace Cannibal\Bundle\PaginationBundle\Pagination\Paginator;
 
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\MetadataInterface;
+use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\EmptyCollection;
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollectionInterface;
 use Cannibal\Bundle\PaginationBundle\Pagination\Adapter\PaginationAdapterInterface;
 use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfigInterface;
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Factory\PaginatedCollectionFactory;
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Factory\MetadataFactory;
 use Cannibal\Bundle\PaginationBundle\Pagination\Fetcher\PaginationFetcher;
-use Cannibal\Bundle\PaginationBundle\Form\Type\PaginationConfigType;
+use Cannibal\Bundle\PaginationBundle\Form\Type\PaginatorType;
 
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\ValidatorInterface;
@@ -82,7 +83,7 @@ class Paginator implements PaginatorInterface
 
     protected function createPaginationType()
     {
-        return new PaginationConfigType();
+        return new PaginatorType();
     }
 
     public function setValidator($validator)
@@ -183,6 +184,8 @@ class Paginator implements PaginatorInterface
         $form->bind($data);
 
         $this->requestData = $requestData;
+
+        return $this;
     }
 
     public function getRequestData()
@@ -214,6 +217,7 @@ class Paginator implements PaginatorInterface
                     if ($thirdPartyAdapter instanceof AdapterInterface && $thirdPartyAdapter instanceof PaginationAdapterInterface) {
                         if ($thirdPartyAdapter->supports($list)) {
                             $adapter = $thirdPartyAdapter;
+                            $adapter->setList($list);
                             break;
                         }
                     }
@@ -230,7 +234,6 @@ class Paginator implements PaginatorInterface
                     throw new AdapterSelectionException(sprintf('Could not find adapter for type %s', $type));
                 }
 
-                $adapter->setList($list);
                 break;
         }
 
@@ -310,6 +313,9 @@ class Paginator implements PaginatorInterface
         if($list != null){
             $this->setList($list);
         }
+        else{
+            $list = $this->getList();
+        }
 
         if(!is_null($page) || !is_null($perPage) || !is_null($bypass)){
             if(!is_null($page)){
@@ -330,9 +336,14 @@ class Paginator implements PaginatorInterface
             throw $error;
         }
 
-        $this->selectAdapter($this->getList());
 
-        if($this->getBypass()){
+
+        $this->selectAdapter($list);
+
+        if($list == null){
+            $out = new EmptyCollection();
+        }
+        elseif($this->getBypass()){
             $out = $this->createUnboundedCollection();
         }
         else{
@@ -340,6 +351,8 @@ class Paginator implements PaginatorInterface
         }
 
         $this->setPaginatedCollection($out);
+
+        return $this;
     }
 
 
