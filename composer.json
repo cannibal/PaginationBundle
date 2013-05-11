@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "white-october/pagerfanta-bundle" : "dev-master"
+        "pagerfanta/pagerfanta": "1.0.*"
     },
     "autoload":{
         "psr-0":{
