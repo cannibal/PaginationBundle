@@ -8,14 +8,20 @@
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
-            <constraint name="Min">1</constraint>
+            <constraint name="Range">
+                <option name="min">1</option>
+                <option name="minMessage">Page number must be at least 1</option>
+            </constraint>
         </property>
 
         <property name="perPage">
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
-            <constraint name="Min">1</constraint>
+            <constraint name="Range">
+                <option name="min">1</option>
+                <option name="minMessage">There must be at least 1 item per page</option>
+            </constraint>
         </property>
 
         <property name="bypass">
@@ -29,14 +35,25 @@
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
-            <constraint name="Min">1</constraint>
+            <constraint name="Range">
+                <option name="min">1</option>
+                <option name="minMessage">Page number must be at least 1</option>
+            </constraint>
         </property>
 
         <property name="perPage">
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
-            <constraint name="Min">1</constraint>
+            <constraint name="Range">
+                <option name="min">1</option>
+                <option name="minMessage">There must be at least 1 item per page</option>
+            </constraint>
+        </property>
+
+        <property name="bypass">
+            <constraint name="NotNull"/>
+            <constraint name="Type">boolean</constraint>
         </property>
     </class>
 
@@ -50,58 +67,19 @@
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
-            <constraint name="Min">1</constraint>
+            <constraint name="Range">
+                <option name="min">1</option>
+                <option name="minMessage">Page number must be at least 1</option>
+            </constraint>
         </property>
 
         <property name="perPage">
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
-            <constraint name="Min">1</constraint>
-        </property>
-
-        <property name="nextPage">
-            <constraint name="Regex">
-                <option name="pattern">/^\d+/</option>
-            </constraint>
-            <constraint name="Min">
-                <option name="limit">
-                    <value>1</value>
-                </option>
-            </constraint>
-        </property>
-
-        <property name="previousPage">
-            <constraint name="Regex">
-                <option name="pattern">/^\d+/</option>
-            </constraint>
-            <constraint name="Min">
-                <option name="limit">
-                    <value>1</value>
-                </option>
-            </constraint>
-        </property>
-
-        <property name="totalResults">
-            <constraint name="NotNull"/>
-            <constraint name="Regex">
-                <option name="pattern">/^\d+/</option>
-            </constraint>
-            <constraint name="Min">
-                <option name="limit">
-                    <value>0</value>
-                </option>
-            </constraint>
-        </property>
-
-        <property name="totalPages">
-            <constraint name="Regex">
-                <option name="pattern">/^\d+/</option>
-            </constraint>
-            <constraint name="Min">
-                <option name="limit">
-                    <value>1</value>
-                </option>
+            <constraint name="Range">
+                <option name="min">1</option>
+                <option name="minMessage">There must be at least 1 item per page</option>
             </constraint>
         </property>
     </class>
