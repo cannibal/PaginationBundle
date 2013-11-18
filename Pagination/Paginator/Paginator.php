@@ -276,9 +276,14 @@ class Paginator implements PaginatorInterface
         $pf->setMaxPerPage($perPage);
 
         $out = $paginatedCollectionFactory->createPagerfantaBasedCollection($pf);
+        $totalResults = $pf->getNbResults();
         $totalPages = $pf->getNbPages();
 
-        if ($current <= $totalPages && $current > 0) {
+        if($totalResults <= 0){
+            $totalPages = 0;
+            $currentPage = 0;
+        }
+        elseif ($current <= $totalPages && $current > 0) {
             $pf->setCurrentPage($current);
         }
         else {
