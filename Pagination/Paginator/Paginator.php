@@ -181,7 +181,7 @@ class Paginator implements PaginatorInterface
         $form = $this->getFormFactory()->create($type, $this);
 
         $data = $this->getFetcher()->fetchPaginationData($requestData);
-        $form->bind($data);
+        $form->submit($data);
 
         $this->requestData = $requestData;
 
@@ -260,8 +260,6 @@ class Paginator implements PaginatorInterface
     }
 
     /**
-     * @param AdapterInterface $adapter
-     * @param PaginationConfigInterface $config
      * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\AdapterBasedCollection|\Cannibal\Bundle\PaginationBundle\Pagination\Paginated\EmptyCollection
      */
     protected function createPaginatedCollection()
