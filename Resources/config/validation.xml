@@ -5,6 +5,7 @@
 
     <class name="Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig">
         <property name="page">
+            <constraint name="NotBlank"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
@@ -15,6 +16,7 @@
         </property>
 
         <property name="perPage">
+            <constraint name="NotBlank"/>
             <constraint name="Regex">
                 <option name="pattern">/^\d+/</option>
             </constraint>
@@ -31,35 +33,10 @@
     </class>
 
     <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginator\Paginator">
-        <property name="page">
-            <constraint name="Regex">
-                <option name="pattern">/^\d+/</option>
-            </constraint>
-            <constraint name="Range">
-                <option name="min">1</option>
-                <option name="minMessage">Page number must be at least 1</option>
-            </constraint>
-        </property>
-
-        <property name="perPage">
-            <constraint name="Regex">
-                <option name="pattern">/^\d+/</option>
-            </constraint>
-            <constraint name="Range">
-                <option name="min">1</option>
-                <option name="minMessage">There must be at least 1 item per page</option>
-            </constraint>
-        </property>
-
-        <property name="bypass">
+        <property name="paginationConfig">
             <constraint name="NotNull"/>
-            <constraint name="Type">boolean</constraint>
+            <constraint name="Valid"/>
         </property>
-    </class>
-
-
-    <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollection">
-
     </class>
 
     <class name="Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Metadata">

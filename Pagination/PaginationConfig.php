@@ -13,8 +13,8 @@ class PaginationConfig implements PaginationConfigInterface
 
     public function __construct()
     {
-        $this->perPage = null;
-        $this->page = null;
+        $this->perPage = 15;
+        $this->page = 1;
         $this->bypass = false;
     }
 

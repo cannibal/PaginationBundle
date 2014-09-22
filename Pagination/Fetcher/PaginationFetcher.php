@@ -1,25 +1,24 @@
 <?php
 namespace Cannibal\Bundle\PaginationBundle\Pagination\Fetcher;
+use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig;
 
-/**
- * Created by JetBrains PhpStorm.
- * User: adam
- * Date: 28/02/2013
- * Time: 17:09
- * To change this template use File | Settings | File Templates.
- */
 class PaginationFetcher
 {
-    public function fetchPaginationData(array $data)
+    public function fetchPaginationData(array $data, $allowBypass = false)
     {
-        $out = array();
+        $out = new PaginationConfig();
 
         if(isset($data['page'])){
-            $out['page'] = $data['page'];
+            $out->setPage(intval($data['page']));
         }
 
         if(isset($data['per_page'])){
-            $out['perPage'] = $data['per_page'];
+            if($data['per_page'] == 'all' && $allowBypass == true){
+                $out->setBypass(true);
+            }
+            else{
+                $out->setPerPage($data['per_page']);
+            }
         }
 
         return $out;
