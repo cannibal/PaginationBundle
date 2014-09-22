@@ -16,9 +16,6 @@ class AdapterPass implements CompilerPassInterface
             $adapters[] = $serviceDefinition;
         }
 
-        $container->getDefinition('pagination.manager')
-            ->replaceArgument(7, $adapters);
-
         $container->getDefinition('cannibal_paginator')
             ->replaceArgument(5, $adapters);
     }
