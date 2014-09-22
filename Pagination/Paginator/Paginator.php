@@ -242,7 +242,7 @@ class Paginator implements PaginatorInterface
         return $this->allowBypass;
     }
 
-    public function setPaginationConfig(array $requestData)
+    public function setRequestData(array $requestData)
     {
         $this->paginationConfig = $this->getFetcher()->fetchPaginationData($requestData, $this->getAllowBypass());
 
