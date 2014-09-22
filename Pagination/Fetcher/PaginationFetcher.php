@@ -13,8 +13,10 @@ class PaginationFetcher
         }
 
         if(isset($data['per_page'])){
-            if($data['per_page'] == 'all' && $allowBypass == true){
-                $out->setBypass(true);
+            if($data['per_page'] == 'all'){
+                if($allowBypass == true){
+                    $out->setBypass(true);
+                }
             }
             else{
                 $out->setPerPage($data['per_page']);
