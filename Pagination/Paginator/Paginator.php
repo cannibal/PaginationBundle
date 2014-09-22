@@ -5,6 +5,7 @@ use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\MetadataInt
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\EmptyCollection;
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\PaginatedCollectionInterface;
 use Cannibal\Bundle\PaginationBundle\Pagination\Adapter\PaginationAdapterInterface;
+use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfig;
 use Cannibal\Bundle\PaginationBundle\Pagination\PaginationConfigInterface;
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Factory\PaginatedCollectionFactory;
 use Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\Factory\MetadataFactory;
@@ -28,11 +29,8 @@ use Cannibal\Bundle\PaginationBundle\Pagination\Exception\AdapterSelectionExcept
 
 class Paginator implements PaginatorInterface
 {
-    private $requestData;
-
-    private $bypass;
-    private $page;
-    private $perPage;
+    private $paginationConfig;
+    private $allowBypass;
 
     private $paginatedCollection;
     private $selectedAdapter;
@@ -61,11 +59,8 @@ class Paginator implements PaginatorInterface
         $this->formFactory = $formFactory;
         $this->validator = $validator;
 
-        $this->requestData = null;
-
-        $this->perPage = 10;
-        $this->page = 1;
-        $this->bypass = false;
+        $this->paginationConfig = null;
+        $this->allowBypass = true;
 
         $this->paginatedCollectionFactory = $pCFactory;
         $this->metaFactory = $metaFactory;
@@ -76,6 +71,202 @@ class Paginator implements PaginatorInterface
         $this->results = null;
     }
 
+
+    public function selectAdapter($list)
+    {
+        $type = gettype($list);
+        $adapter = null;
+        switch ($type) {
+            case 'array':
+                $adapter = new ArrayAdapter($list);
+                break;
+            case 'object':
+                /** @var PaginationAdapterInterface $thirdPartyAdapter */
+                foreach ($this->getAdapters() as $thirdPartyAdapter) {
+                    if ($thirdPartyAdapter instanceof AdapterInterface && $thirdPartyAdapter instanceof PaginationAdapterInterface) {
+                        if ($thirdPartyAdapter->supports($list)) {
+                            $adapter = $thirdPartyAdapter;
+                            $adapter->setList($list);
+                            break;
+                        }
+                    }
+                }
+
+                if ($list instanceof Collection) {
+                    $adapter = new DoctrineCollectionAdapter($list);
+                }
+                elseif ($list instanceof QueryBuilder) {
+                    $adapter = new DoctrineORMAdapter($list);
+                }
+
+                if($adapter == null){
+                    throw new AdapterSelectionException(sprintf('Could not find adapter for type %s', $type));
+                }
+
+                break;
+        }
+
+        $this->setSelectedAdapter($adapter);
+    }
+
+    /**
+     * @param \Pagerfanta\Adapter\AdapterInterface $adapter
+     * @param PaginationConfigInterface $config
+     */
+    protected function createUnboundedCollection()
+    {
+        $adapter = $this->getAdapter();
+
+        $out = $this->getPaginatedCollectionFactory()->createArrayCollection();
+        /** @var \ArrayIterator $results */
+        $results = $adapter->getSlice(0, $adapter->getNbResults());
+        $out->setResults($results->getArrayCopy());
+        $meta = $this->getMetaFactory()->createPaginatedCollectionMetadata();
+        $meta->setTotalResults(count($out->getResults()));
+        $meta->setPerPage($meta->getTotalResults());
+        $meta->setPage(1);
+
+        $out->setMetadata($meta);
+
+        return $out;
+    }
+
+    /**
+     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\AdapterBasedCollection|\Cannibal\Bundle\PaginationBundle\Pagination\Paginated\EmptyCollection
+     */
+    protected function createPaginatedCollection()
+    {
+        $adapter = $this->getAdapter();
+        $paginatedCollectionFactory = $this->getPaginatedCollectionFactory();
+        $config = $this->getPaginationConfig();
+
+        $perPage = $config->getPerPage();
+        $current = $config->getPage();
+
+        $pf = $this->createPagerfanta($adapter);
+        $pf->setMaxPerPage($perPage);
+
+        $out = $paginatedCollectionFactory->createPagerfantaBasedCollection($pf);
+        $totalResults = $pf->getNbResults();
+        $totalPages = $pf->getNbPages();
+
+        if($totalResults <= 0){
+            $totalPages = 0;
+        }
+        elseif ($current <= $totalPages && $current > 0) {
+            $pf->setCurrentPage($current);
+        }
+        else {
+            $pf->setCurrentPage(1);
+            $out = $paginatedCollectionFactory->createEmptyCollection();
+        }
+
+        $next = $pf->hasNextPage() ? $pf->getNextPage() : null;
+        $previous = $pf->hasPreviousPage() ? $pf->getPreviousPage() : null;
+
+        $metadata = $this->getMetaFactory()->createPaginatedCollectionMetadata();
+        $metadata->setPage($current);
+        $metadata->setNextPage($next);
+        $metadata->setPreviousPage($previous);
+        $metadata->setPerPage($perPage);
+        $metadata->setTotalResults($pf->getNbResults());
+        $metadata->setTotalPages($totalPages);
+
+        $out->setMetadata($metadata);
+
+        return $out;
+    }
+
+    /**
+     * @param null $page
+     * @param null $perPage
+     * @param null $bypass
+     * @throws \Cannibal\Bundle\PaginationBundle\Pagination\Exception\PaginationException
+     */
+    public function paginate($list = null, $page = null, $perPage = null, $bypass = null)
+    {
+        if($list != null){
+            $this->setList($list);
+        }
+        else{
+            $list = $this->getList();
+        }
+
+        if(!is_null($page)){
+            $this->setPage($page);
+        }
+        if(!is_null($perPage)){
+            $this->setPerPage($perPage);
+        }
+        if(!is_null($bypass)){
+            $this->setBypass($bypass);
+        }
+
+        $errors = $this->getValidator()->validate($this);
+        if(count($errors) > 0){
+            $error = new PaginationException('The pagination configuration was invalid');
+            $error->setPaginationErrors($errors);
+
+            throw $error;
+        }
+
+        $this->selectAdapter($list);
+
+        if($list == null){
+            $out = new EmptyCollection();
+        }
+        elseif($this->getBypass()){
+            $out = $this->createUnboundedCollection();
+        }
+        else{
+            $out = $this->createPaginatedCollection();
+        }
+
+        $this->setPaginatedCollection($out);
+
+        return $this;
+    }
+
+    public function setAllowBypass($bypass)
+    {
+        $this->allowBypass = true;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAllowBypass()
+    {
+        return $this->allowBypass;
+    }
+
+    public function setPaginationConfig(array $requestData)
+    {
+        $this->paginationConfig = $this->getFetcher()->fetchPaginationData($requestData, $this->getAllowBypass());
+
+        return $this;
+    }
+
+    /**
+     * @return PaginationConfig
+     */
+    public function getPaginationConfig()
+    {
+        return $this->paginationConfig;
+    }
+
+    /**
+     * @return array
+     */
+    public function getResults()
+    {
+        $out =  $this->getPaginatedCollection()->getResults();
+        return $out;
+    }
+
+
     protected function createPagerfanta(AdapterInterface $adapter)
     {
         return new Pagerfanta($adapter);
@@ -85,6 +276,32 @@ class Paginator implements PaginatorInterface
     {
         return new PaginatorType();
     }
+
+    //PaginatedCollectionInterface
+
+    /**
+     * This function returns the wrapped paginator instance.
+     *
+     * @return mixed|null
+     */
+    public function getAdapter()
+    {
+        return $this->selectedAdapter;
+    }
+
+    /**
+     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\MetadataInterface
+     */
+    public function getMetadata()
+    {
+        return $this->getPaginatedCollection()->getMetadata();
+    }
+
+    public function setMetadata(MetadataInterface $metadata)
+    {
+        return $this->getPaginatedCollection()->setMetadata($metadata);
+    }
+
 
     public function setValidator($validator)
     {
@@ -175,24 +392,6 @@ class Paginator implements PaginatorInterface
         return $this->paginatedCollection;
     }
 
-    public function setRequestData(array $requestData)
-    {
-        $type = $this->createPaginationType();
-        $form = $this->getFormFactory()->create($type, $this);
-
-        $data = $this->getFetcher()->fetchPaginationData($requestData);
-        $form->submit($data);
-
-        $this->requestData = $requestData;
-
-        return $this;
-    }
-
-    public function getRequestData()
-    {
-        return $this->requestData;
-    }
-
     public function setSelectedAdapter($selectedAdapter)
     {
         $this->selectedAdapter = $selectedAdapter;
@@ -203,228 +402,45 @@ class Paginator implements PaginatorInterface
         return $this->selectedAdapter;
     }
 
-    public function selectAdapter($list)
-    {
-        $type = gettype($list);
-        $adapter = null;
-        switch ($type) {
-            case 'array':
-                $adapter = new ArrayAdapter($list);
-                break;
-            case 'object':
-                /** @var PaginationAdapterInterface $thirdPartyAdapter */
-                foreach ($this->getAdapters() as $thirdPartyAdapter) {
-                    if ($thirdPartyAdapter instanceof AdapterInterface && $thirdPartyAdapter instanceof PaginationAdapterInterface) {
-                        if ($thirdPartyAdapter->supports($list)) {
-                            $adapter = $thirdPartyAdapter;
-                            $adapter->setList($list);
-                            break;
-                        }
-                    }
-                }
-
-                if ($list instanceof Collection) {
-                    $adapter = new DoctrineCollectionAdapter($list);
-                }
-                elseif ($list instanceof QueryBuilder) {
-                    $adapter = new DoctrineORMAdapter($list);
-                }
-
-                if($adapter == null){
-                    throw new AdapterSelectionException(sprintf('Could not find adapter for type %s', $type));
-                }
-
-                break;
-        }
-
-        $this->setSelectedAdapter($adapter);
-    }
-
-    /**
-     * @param \Pagerfanta\Adapter\AdapterInterface $adapter
-     * @param PaginationConfigInterface $config
-     */
-    protected function createUnboundedCollection()
-    {
-        $adapter = $this->getAdapter();
-
-        $out = $this->getPaginatedCollectionFactory()->createArrayCollection();
-        /** @var \ArrayIterator $results */
-        $results = $adapter->getSlice(0, $adapter->getNbResults());
-        $out->setResults($results->getArrayCopy());
-        $meta = $this->getMetaFactory()->createPaginatedCollectionMetadata();
-        $meta->setTotalResults(count($out->getResults()));
-        $out->setMetadata($meta);
-
-        return $out;
-    }
-
-    /**
-     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\AdapterBasedCollection|\Cannibal\Bundle\PaginationBundle\Pagination\Paginated\EmptyCollection
-     */
-    protected function createPaginatedCollection()
-    {
-        $adapter = $this->getAdapter();
-        $paginatedCollectionFactory = $this->getPaginatedCollectionFactory();
-
-        $perPage = $this->getPerPage();
-        $current = $this->getPage();
-
-        $pf = $this->createPagerfanta($adapter);
-        $pf->setMaxPerPage($perPage);
-
-        $out = $paginatedCollectionFactory->createPagerfantaBasedCollection($pf);
-        $totalResults = $pf->getNbResults();
-        $totalPages = $pf->getNbPages();
-
-        if($totalResults <= 0){
-            $totalPages = 0;
-            $currentPage = 0;
-        }
-        elseif ($current <= $totalPages && $current > 0) {
-            $pf->setCurrentPage($current);
-        }
-        else {
-            $pf->setCurrentPage(1);
-            $out = $paginatedCollectionFactory->createEmptyCollection();
-        }
-
-        $next = $pf->hasNextPage() ? $pf->getNextPage() : null;
-        $previous = $pf->hasPreviousPage() ? $pf->getPreviousPage() : null;
-
-        $metadata = $this->getMetaFactory()->createPaginatedCollectionMetadata();
-        $metadata->setPage($current);
-        $metadata->setNextPage($next);
-        $metadata->setPreviousPage($previous);
-        $metadata->setPerPage($perPage);
-        $metadata->setTotalResults($pf->getNbResults());
-        $metadata->setTotalPages($totalPages);
-
-        $out->setMetadata($metadata);
-
-        return $out;
-    }
-
-    /**
-     * @param null $page
-     * @param null $perPage
-     * @param null $bypass
-     * @throws \Cannibal\Bundle\PaginationBundle\Pagination\Exception\PaginationException
-     */
-    public function paginate($list = null, $page = null, $perPage = null, $bypass = null)
-    {
-        if($list != null){
-            $this->setList($list);
-        }
-        else{
-            $list = $this->getList();
-        }
-
-        if(!is_null($page) || !is_null($perPage) || !is_null($bypass)){
-            if(!is_null($page)){
-                $this->setPage($page);
-            }
-            if(!is_null($perPage)){
-                $this->setPerPage($perPage);
-            }
-            if(!is_null($bypass)){
-                $this->setBypass($bypass);
-            }
-        }
-
-        $errors = $this->getValidator()->validate($this);
-        if(count($errors) > 0){
-            $error = new PaginationException('The pagination configuration was invalid');
-            $error->setPaginationErrors($errors);
-            throw $error;
-        }
-
-
-
-        $this->selectAdapter($list);
-
-        if($list == null){
-            $out = new EmptyCollection();
-        }
-        elseif($this->getBypass()){
-            $out = $this->createUnboundedCollection();
-        }
-        else{
-            $out = $this->createPaginatedCollection();
-        }
-
-        $this->setPaginatedCollection($out);
-
-        return $this;
-    }
-
-
-    //PaginatedCollectionInterface
-
-    /**
-     * This function returns the wrapped paginator instance.
-     *
-     * @return mixed|null
-     */
-    public function getAdapter()
-    {
-        return $this->selectedAdapter;
-    }
-
-    /**
-     * @return array
-     */
-    public function getResults()
-    {
-        $out =  $this->getPaginatedCollection()->getResults();
-        return $out;
-    }
-
-    /**
-     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginated\Collection\MetadataInterface
-     */
-    public function getMetadata()
-    {
-        return $this->getPaginatedCollection()->getMetadata();
-    }
-
-    public function setMetadata(MetadataInterface $metadata)
-    {
-        return $this->getPaginatedCollection()->setMetadata($metadata);
-    }
-
-
-    //PaginationConfigInterface
-    public function setBypass($bypass)
-    {
-        $this->bypass = $bypass;
-        return $this;
-    }
-
-    public function getBypass()
-    {
-        return $this->bypass;
-    }
-
-    public function setPage($page)
-    {
-        $this->page = $page;
-        return $this;
-    }
-
     public function getPage()
     {
-        return $this->page;
-    }
-
-    public function setPerPage($perPage)
-    {
-        $this->perPage = $perPage;
-        return $this;
+        return $this->getPaginationConfig()->getPage();
     }
 
     public function getPerPage()
     {
-        return $this->perPage;
+        return $this->getPaginationConfig()->getPerPage();
+    }
+
+    public function getBypass()
+    {
+        return $this->getPaginationConfig()->getBypass();
+    }
+
+    /**
+     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginator\PaginatorInterface
+     */
+    public function setPage($page)
+    {
+        $this->getPaginationConfig()->setPage($page);
+        return $this;
+    }
+
+    /**
+     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginator\PaginatorInterface
+     */
+    public function setPerPage($perPage)
+    {
+        $this->getPaginationConfig()->setPerPage($perPage);
+        return $this;
+    }
+
+    /**
+     * @return \Cannibal\Bundle\PaginationBundle\Pagination\Paginator\PaginatorInterface
+     */
+    public function setBypass($bypass)
+    {
+        $this->getPaginationConfig()->setBypass($bypass);
+        return $this;
     }
 }
