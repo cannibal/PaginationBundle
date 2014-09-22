@@ -60,7 +60,7 @@ class Paginator implements PaginatorInterface
         $this->validator = $validator;
 
         $this->paginationConfig = null;
-        $this->allowBypass = true;
+        $this->allowBypass = false;
 
         $this->paginatedCollectionFactory = $pCFactory;
         $this->metaFactory = $metaFactory;
@@ -125,6 +125,7 @@ class Paginator implements PaginatorInterface
         $meta->setTotalResults(count($out->getResults()));
         $meta->setPerPage($meta->getTotalResults());
         $meta->setPage(1);
+        $meta->setTotalPages(1);
 
         $out->setMetadata($meta);
 
@@ -229,7 +230,7 @@ class Paginator implements PaginatorInterface
 
     public function setAllowBypass($bypass)
     {
-        $this->allowBypass = true;
+        $this->allowBypass = $bypass;
 
         return $this;
     }
