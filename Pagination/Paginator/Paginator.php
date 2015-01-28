@@ -96,7 +96,7 @@ class Paginator implements PaginatorInterface
                     $adapter = new DoctrineCollectionAdapter($list);
                 }
                 elseif ($list instanceof QueryBuilder) {
-                    $adapter = new DoctrineORMAdapter($list);
+                    $adapter = new DoctrineORMAdapter($list, true, false);
                 }
 
                 if($adapter == null){
