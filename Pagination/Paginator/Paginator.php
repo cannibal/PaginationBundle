@@ -120,6 +120,11 @@ class Paginator implements PaginatorInterface
         $out = $this->getPaginatedCollectionFactory()->createArrayCollection();
         /** @var \ArrayIterator $results */
         $results = $adapter->getSlice(0, $adapter->getNbResults());
+
+        if(is_array($results)){
+            $results = new \ArrayIterator($results);
+        }
+
         $out->setResults($results->getArrayCopy());
         $meta = $this->getMetaFactory()->createPaginatedCollectionMetadata();
         $meta->setTotalResults(count($out->getResults()));
